@@ -3,20 +3,15 @@ import pytest
 
 
 def test_win_row():
-    # Arrange
     board = empty_board()
-
-    # Act
     board = place_mark(board, 0, "X")
     board = place_mark(board, 1, "X")
     board = place_mark(board, 2, "X")
 
-    # Assert
     assert check_winner(board) == "X"
 
 
 def test_draw():
-    # A full board with no winner
     board = [
         "X", "O", "X",
         "X", "O", "O",
@@ -62,13 +57,11 @@ def test_draw_state_no_winner():
 def test_make_move_on_taken_cell_raises_error():
     board = empty_board()
     board = place_mark(board, 0, "X")
-
     with pytest.raises(ValueError):
         place_mark(board, 0, "X")
 
 
 def test_cannot_move_after_game_won():
-    # X already has a winning row (0,1,2)
     board = ["X", "X", "X", None, None, None, None, None, None]
     assert check_winner(board) == "X"
 
