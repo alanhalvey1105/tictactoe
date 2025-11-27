@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+databases[postgresql]
+asyncpg
+pydantic
+pytest
+httpx
+python-dotenv
+pytest-asyncio

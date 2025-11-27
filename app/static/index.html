@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Tic Tac Toe</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        input, button {
+            padding: 8px 14px;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 6px;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 80px;
+            height: 80px;
+            font-size: 32px;
+            background: #f3f3f3;
+            border: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        .cell:disabled {
+            background: #ddd;
+            cursor: default;
+        }
+
+        #status {
+            font-size: 18px;
+            margin-top: 20px;
+            white-space: pre-line;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Tic Tac Toe</h2>
+
+    <input id="name" placeholder="Your name" />
+    <button id="new">New Game</button>
+
+    <br><br>
+
+    <input id="gid" placeholder="Game ID" />
+    <button id="join">Join Game</button>
+
+    <h3 id="status"></h3>
+    <div id="board"></div>
+
+<script>
+// ------------------------------
+// API Helper (clean + readable)
+// ------------------------------
+async function API(url, method = "GET", body = null) {
+    const options = {
+        method,
+        headers: { "Content-Type": "application/json" }
+    };
+
+    if (body !== null) {
+        options.body = JSON.stringify(body);
+    }
+
+    const res = await fetch(url, options);
+
+    let data;
+    try {
+        data = await res.json();
+    } catch {
+        data = null;
+    }
+
+    if (!res.ok) {
+        const message = data?.detail || data?.message || "Request failed";
+        const err = new Error(message);
+        err.status = res.status;
+        throw err;
+    }
+
+    return data;
+}
+
+
+// ------------------------------
+// Global Game State
+// ------------------------------
+let state = null;
+
+
+// ------------------------------
+// Rendering UI
+// ------------------------------
+function render() {
+    const status = document.getElementById("status");
+    status.innerText =
+        `Game:   ${state.id}
+        Player: ${state.player}
+        CPU:    Computer
+        Winner: ${state.winner ?? "-"} 
+        Draw:   ${state.is_draw ? "You can not draw" : state.winner ? "You can not draw(Game already finished)" : "You can draw"}
+        `;
+
+    const boardEl = document.getElementById("board");
+    boardEl.innerHTML = "";
+
+    state.board.forEach((cell, i) => {
+        const btn = document.createElement("button");
+        btn.className = "cell";
+        btn.innerText = cell || "";
+
+        btn.onclick = () => makeMove(i);
+
+        boardEl.appendChild(btn);
+    });
+}
+
+
+// ------------------------------
+// Actions
+// ------------------------------
+async function newGame() {
+    const player = document.getElementById("name").value;
+    if (!player) return alert("Enter your name first.");
+
+    try {
+        state = await API("/games", "POST", { player_name: player });
+        render();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+async function joinGame() {
+    const player = document.getElementById("name").value;
+    const gid = document.getElementById("gid").value;
+
+    if (!gid) return alert("Enter game ID.");
+
+    try {
+        state = await API(`/games/${gid}/join`, "POST", { player_name: player });
+        render();
+    } catch (err) {
+        alert("Join failed: " + err.message);
+    }
+}
+
+async function makeMove(position) {
+    const player = document.getElementById("name").value;
+
+    try {
+        state = await API(`/games/${state.id}/move`, "POST", {
+            player_name: player,
+            position
+        });
+        render();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+
+// ------------------------------
+// Event Listeners
+// ------------------------------
+document.getElementById("new").onclick = newGame;
+document.getElementById("join").onclick = joinGame;
+
+</script>
+</body>
+</html>
