@@ -51,8 +51,21 @@ Follow these steps to run the project locally on Linux(Ubuntu):
 
 ---
 
+### 1.Clone this repository
 
-### 1.Create Virtual Environment
+```bash
+git clone https://github.com/alanhalvey1105/tictactoe.git
+
+```
+
+### 2.Go to Directory
+
+```bash
+cd tictactoe
+
+```
+
+### 3.Create Virtual Environment
 
 ```bash
 python3 -m venv venv
@@ -60,28 +73,28 @@ source venv/bin/activate
 
 ```
 
-### 2.Install Dependencies
+### 4.Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 
 ```
 
-### 3.Start PostgreSQL(Local)
+### 5.Start PostgreSQL(Local)
 
 ```bash
 sudo service postgresql start
 
 
 ```
-### 4.Copy the file **.env.example** and create a new file named **.env**
+### 6.Copy the file **.env.example** and create a new file named **.env**
 
 ```bash
 cp .env.example .env
 
 
 ```
-### 5.Run FastAPI Server
+### 7.Run FastAPI Server
 
 ```bash
 uvicorn app.main:app --reload
@@ -89,7 +102,7 @@ uvicorn app.main:app --reload
 
 ```
 
-### 6.Start Tic-Tac-Toe game
+### 8.Start Tic-Tac-Toe game
 
 ```bash
 
