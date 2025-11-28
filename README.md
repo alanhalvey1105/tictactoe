@@ -152,7 +152,14 @@ Below is the recommended structure for this FastAPI + PostgreSQL project:
 
 ## Run Test
 
+### Run all tests
+
 ```bash
 pytest
+```
+### Run tests with verbose output
+
+```bash
+pytest -v
 ```
 ---
