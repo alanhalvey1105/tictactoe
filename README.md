@@ -83,7 +83,21 @@ pip install -r requirements.txt
 ### 5.Start PostgreSQL(Local)
 
 ```bash
-sudo service postgresql start
+
+sudo apt install postgresql
+
+sudo -u postgres createuser postgres
+
+sudo -u postgres createdb tictactoe
+
+sudo -u postgres psql
+
+postgres=# \password
+Enter new password for user "postgres": 
+Enter it again: 
+postgres=# \q
+
+sudo service postgresql restart
 
 
 ```
